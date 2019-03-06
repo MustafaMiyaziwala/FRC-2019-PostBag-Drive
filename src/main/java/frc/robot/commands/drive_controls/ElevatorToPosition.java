@@ -1,14 +1,14 @@
-package frc.robot.commands;
+package frc.robot.commands.drive_controls;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.commands.VibrateControllers;
 import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.Elevator.ElevatorPosition;
 import frc.robot.util.PIDSource;
 import frc.robot.util.SimplePID;
 
-public class PIDElevatorToPosition extends Command {
+public class ElevatorToPosition extends Command {
 
   private final static int ELEVATOR_THRESHOLD = 5;
   private final static int CLOCK_MAX = 10;
@@ -28,12 +28,13 @@ public class PIDElevatorToPosition extends Command {
   private double kI = 0.002;
   private double kD = 0.001;
 
-  // Setpoint ramp
-  private double startTime;
-  private double elapsedTime;
+  
   private double setpoint;
   private boolean isBottom;
   private Elevator.ElevatorPosition elevatorPosition;
+
+  private VibrateControllers vibrateControllers;
+  private boolean hasVibrated;
 
   /**
    * Specify an elevator position using the "Elevator Position" enum and the robot
@@ -41,7 +42,7 @@ public class PIDElevatorToPosition extends Command {
    * 
    * @param elevatorPosition
    */
-  public PIDElevatorToPosition(Elevator.ElevatorPosition elevatorPosition) {
+  public ElevatorToPosition(Elevator.ElevatorPosition elevatorPosition) {
     requires(Robot.elevator);
 
     elevatorSource = () -> Robot.elevator.getElevatorEncoderOutput();
@@ -51,6 +52,7 @@ public class PIDElevatorToPosition extends Command {
 
     timer = new Timer();
     elevatorPID = new SimplePID(elevatorSource, elevatorTarget, kP, kI, kD, "ElevatorPositionPID", false);
+    
     isBottom = elevatorTarget == Elevator.ElevatorPosition.DOWN.getPosition();
 
     if (isBottom) {
@@ -74,6 +76,14 @@ public class PIDElevatorToPosition extends Command {
   protected void execute() {
   
     if(isFinished){
+      if(!hasVibrated){
+        try {
+          vibrateControllers = new VibrateControllers(0.75, Robot.oi.driveStick, Robot.oi.secondStick);
+          vibrateControllers.start();
+        } finally {
+          vibrateControllers.close();
+        }
+      }
       System.out.println("Finished - stalling");
       if(isBottom){
         Robot.elevator.setPower(0);
@@ -87,7 +97,7 @@ public class PIDElevatorToPosition extends Command {
       Robot.elevator.setPower(output);
       /*
        * logic for ending the the pid loop, if it is within a certain range for a
-       * period of time meaning its velocity isn't too high, then end the command
+       * period of time meaning its velocity isn't too high, then stall the motors
        */
       System.out.println("Inside Execute");
       if (Math.abs(error) <= ELEVATOR_THRESHOLD) {

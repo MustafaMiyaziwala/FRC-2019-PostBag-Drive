@@ -9,16 +9,15 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
-import frc.robot.commands.IntakeControl;
+import frc.robot.commands.drive_controls.*;
 import frc.robot.util.Debouncer;
-import frc.robot.util.RawInput;
 
 public class Intake extends Subsystem {
 
 	WPI_TalonSRX masterIntakeMotor, slaveIntakeMotor, innerIntakeMotor;
 	Solenoid intakeSolenoid, slaveIntakeSolenoid;
 	AnalogInput beamBreak;
-	RawInput beamBreakInput;
+	Debouncer.RawInput beamBreakInput;
 	Debouncer beamBreakDebouncer;
 
 	public static final int BALL_IS_IN_CURRENT = 0;

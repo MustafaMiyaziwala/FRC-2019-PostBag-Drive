@@ -1,11 +1,12 @@
 package frc.robot.controllers;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
-public class Logitech {
+public class Xbox {
 
-	private static final double JOYSTICK_DEADZONE = 0.05;
+	private static final double JOYSTICK_DEADZONE = 0.00;
 
 	// main circle buttons
 	private static final int BUTTON_A = 1;
@@ -34,7 +35,7 @@ public class Logitech {
 
 	private Joystick joystick;
 
-	public Logitech(int port) {
+	public Xbox(int port) {
 		joystick = new Joystick(port);
 		buttonA = new JoystickButton(joystick, BUTTON_A);
 		buttonB = new JoystickButton(joystick, BUTTON_B);
@@ -53,11 +54,11 @@ public class Logitech {
 	}
 	
 	public double getLY() {
-		return joystick.getRawAxis(AXIS_LY);
+		return clipDeadzone(joystick.getRawAxis(AXIS_LY));
 	}
 
 	public double getRX() {
-		return joystick.getRawAxis(AXIS_RX);
+		return clipDeadzone(joystick.getRawAxis(AXIS_RX));
 	}
 
 	public double getRY() {
@@ -84,6 +85,16 @@ public class Logitech {
 	public boolean isPOVDownish() {
 		double pov = getPOV();
 		return (pov == 225 || pov == 180 || pov == 135);
+	}
+
+	public void vibrate(){
+		joystick.setRumble(RumbleType.kRightRumble, 1);
+		joystick.setRumble(RumbleType.kLeftRumble, 1);
+	}
+
+	public void stopVibrate(){
+		joystick.setRumble(RumbleType.kRightRumble, 0);
+		joystick.setRumble(RumbleType.kLeftRumble, 0);
 	}
 
 	private double clipDeadzone(double rawValue) {

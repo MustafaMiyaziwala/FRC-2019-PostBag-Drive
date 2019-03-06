@@ -1,25 +1,20 @@
 package frc.robot;
 
 import java.io.IOException;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.DriveStraightTest;
-import frc.robot.commands.TurnPIDTest;
-import frc.robot.subsystems.DriveTrain;
-import frc.robot.subsystems.Elevator;
-import frc.robot.subsystems.HatchMechanism;
-import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.*;
 import frc.robot.util.Logger;
 import frc.robot.util.RPS;
-import jdk.jfr.Unsigned;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -83,6 +78,8 @@ public class Robot extends TimedRobot {
 			SystemLog.writeWithTimeStamp("IOException at Jetson Start: " + e.getMessage());
 		}
 		SystemLog.writeWithTimeStamp("Jetson Process Start Attempted | Did not Block");
+
+		CameraServer.getInstance().startAutomaticCapture();
 	}
 
 	/**
@@ -102,6 +99,7 @@ public class Robot extends TimedRobot {
 		intake.setIntakeDataOnDisplay();
 		
 		
+		
 		//System.out.println(Robot.driveTrain.getLeftEncoderDistanceMeters());
 	}
 
@@ -116,7 +114,7 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void disabledPeriodic() {
-		
+		//oi.driveStick.stopVibrate();
 		Scheduler.getInstance().run();
 	}
 
@@ -137,7 +135,7 @@ public class Robot extends TimedRobot {
 		rps.reset();
 		driveTrain.resetEncoders();
 		//m_autonomousCommand = new TurnPIDTest();
-		m_autonomousCommand = new TurnPIDTest();
+		//m_autonomousCommand = new TurnPIDTest();
 		/*
 		 * String autoSelected = SmartDashboard.getString("Auto Selector", "Default");
 		 * switch(autoSelected) { case "My Auto": autonomousCommand = new
@@ -175,9 +173,9 @@ public class Robot extends TimedRobot {
 		intake.retractIntake();
 		elevator.elevatorEncoder.reset();
 		rps.reset();
-		for(int i = 1; i < 33; i++){
+		/*for(int i = 1; i < 33; i++){
 			unojoy.setOutput(i, true);
-		}
+		}*/
 		
 	}
 
@@ -189,6 +187,7 @@ public class Robot extends TimedRobot {
 		
 		Logger.flushAllLogs();
 		Scheduler.getInstance().run();
+		//oi.driveStick.vibrate();
 	}
 
 	/**

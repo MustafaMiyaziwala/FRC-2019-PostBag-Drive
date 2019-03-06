@@ -1,18 +1,21 @@
-package frc.robot.commands;
+package frc.robot.commands.basic_commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.commands.VibrateControllers;
 
-public class RetractIntake extends Command {
-	
-	public RetractIntake() {
-		requires(Robot.intake);
+public class ReleaseHatch extends Command {
+
+	private VibrateControllers vibrateControllers;
+
+	public ReleaseHatch() {
+		requires(Robot.hatchMechanism);
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		Robot.intake.retractIntake();
+		Robot.hatchMechanism.releaseLotus();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
@@ -23,7 +26,18 @@ public class RetractIntake extends Command {
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return !Robot.intake.getIntakeSolenoidState();
+		if(!Robot.hatchMechanism.isLotusOpen()){
+			try {
+				vibrateControllers = new VibrateControllers(0.3, Robot.oi.driveStick, Robot.oi.secondStick);
+				vibrateControllers.start();
+			} finally {
+				vibrateControllers.close();
+			}
+			
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	// Called once after isFinished returns true

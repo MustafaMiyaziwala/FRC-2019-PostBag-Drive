@@ -1,46 +1,53 @@
-package frc.robot.commands;
+package frc.robot.commands.basic_commands;
 
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
+import frc.robot.commands.VibrateControllers;
 
-public class ElevatorControl extends Command {
+public class GraspHatch extends Command {
 
-	
+	private VibrateControllers vibrateControllers;
 
-	public ElevatorControl() {
-		requires(Robot.elevator);
+	public GraspHatch() {
+		requires(Robot.hatchMechanism);
 	}
 
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		Robot.elevator.setPower(0);
+		Robot.hatchMechanism.graspLotus();
 	}
 
 	// Called repeatedly when this Command is scheduled to run
 	@Override
 	protected void execute() {
-		
-		double joyVal = -Robot.oi.secondStick.getRY();
-		Robot.elevator.setPower(joyVal); 
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
 	@Override
 	protected boolean isFinished() {
-		return false;
+		if(Robot.hatchMechanism.isLotusOpen()) {
+			try {
+				vibrateControllers = new VibrateControllers(0.3, Robot.oi.driveStick, Robot.oi.secondStick);
+				vibrateControllers.start();
+				
+			} finally {
+				vibrateControllers.close();
+			}
+			return true;
+		} else{
+			return false;
+		}
 	}
 
 	// Called once after isFinished returns true
 	@Override
 	protected void end() {
-		Robot.elevator.setPower(0);
 	}
 
 	// Called when another command which requires one or more of the same subsystems
 	// is scheduled to run
 	@Override
 	protected void interrupted() {
-		end();
 	}
 }

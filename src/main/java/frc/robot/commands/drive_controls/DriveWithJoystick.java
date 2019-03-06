@@ -1,7 +1,7 @@
-package frc.robot.commands;
+package frc.robot.commands.drive_controls;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.Robot;
-import frc.robot.controllers.Logitech;
+import frc.robot.controllers.Xbox;
 public class DriveWithJoystick extends Command {
 
 	double forwardClipAmount, turnClipAmount;
@@ -36,7 +36,7 @@ public class DriveWithJoystick extends Command {
 			turnClipAmount = 1;
 		}
 
-		Robot.driveTrain.arcadeDrive(-Logitech.clipAxis(forward, forwardClipAmount), Logitech.clipAxis(turn, turnClipAmount));
+		Robot.driveTrain.arcadeDrive(-Xbox.clipAxis(forward, forwardClipAmount),0.75*(Xbox.clipAxis(turn, turnClipAmount)));
 		//System.out.println("Driving: " + forward);
 		//Robot.driveTrain.testMotor();
 		//Robot.driveTrain.tankDrive(-left, -right);
