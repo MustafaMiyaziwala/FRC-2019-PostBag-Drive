@@ -1,11 +1,14 @@
 package frc.robot.subsystems;
 
+
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 import frc.robot.RobotMap;
@@ -26,6 +29,10 @@ public class Elevator extends Subsystem {
 	public final static int amps = 15;
 	public final static int timeoutMs = 5000;
 
+	public final static double STALL_POWER = 0.07;
+
+
+
 	public Elevator() {
 		rightElevatorMotor = new WPI_TalonSRX(RobotMap.RIGHT_ELEVATOR);
 		leftElevatorMotor = new WPI_TalonSRX(RobotMap.LEFT_ELEVATOR);
@@ -35,18 +42,20 @@ public class Elevator extends Subsystem {
 		rightElevatorMotor.configContinuousCurrentLimit(amps, timeoutMs);
 		leftElevatorMotor.configContinuousCurrentLimit(amps, timeoutMs);
 
-		rightElevatorMotor.setInverted(true);
-		leftElevatorMotor.setInverted(true);
+		rightElevatorMotor.setInverted(false);
+		leftElevatorMotor.setInverted(false);
 
 
 		elevatorEncoder = new Encoder(RobotMap.ELEVATOR_ENCODER_PORT_A, RobotMap.ELEVATOR_ENCODER_PORT_B);
 		elevatorLimitSwitch = new DigitalInput(RobotMap.ELEVATOR_LIMIT_SWITCH);
-		
+
 	}
 	
 	public int getElevatorEncoderOutput()	{
 		return elevatorEncoder.get();
 	}
+
+
 
 	/**
 	 * Sets the power to the motor. Takes in consideration of the current elevator
@@ -55,7 +64,7 @@ public class Elevator extends Subsystem {
 	 * @param power power <= 0
 	 */
 	public void setStallPower()	{
-		setRawPower(0.13);
+		setRawPower(STALL_POWER);
 	}
 	private void setRawPower(double power) {
 		rightElevatorMotor.set(power);
@@ -74,9 +83,6 @@ public class Elevator extends Subsystem {
 			setRawPower(power);
 		}
 
-		if (getLimitSwitchState()) {
-			elevatorEncoder.reset();
-		}
 	}
 
 	/**
@@ -89,7 +95,7 @@ public class Elevator extends Subsystem {
 
 	@Override
 	public void initDefaultCommand() {
-		setDefaultCommand(new ElevatorControl());
+		//setDefaultCommand(new ElevatorControl());
 	}
 
 	public void setElevatorDataOnDisplay() {

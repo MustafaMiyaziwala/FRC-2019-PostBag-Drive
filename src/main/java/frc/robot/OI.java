@@ -1,6 +1,7 @@
 package frc.robot;
 
 import frc.robot.commands.drive_controls.*;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.commands.basic_commands.*;
 import frc.robot.controllers.Xbox;
 import frc.robot.subsystems.Elevator;
@@ -20,27 +21,20 @@ public class OI {
 
 		driveStick = new Xbox(0);
 		secondStick = new Xbox(1);
-
-
-		
-		Waypoint[] test = new Waypoint[]{
-			new Waypoint(0, 0, 0),
-			new Waypoint(5, 5, Math.PI/2),
-		};
 		//driveStick.buttonA.whenPressed(new PathExecuter("TestPath"));
 
-		secondStick.buttonLJoystick.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.DOWN));
+		secondStick.buttonRBumper.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.DOWN));
+		secondStick.buttonLBumper.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.DOWN));
 		secondStick.buttonX.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.ROCKET_SECOND));
 		secondStick.buttonA.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.ROCKET_FIRST));
 		secondStick.buttonY.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.ROCKET_THIRD));
 		secondStick.buttonB.whenPressed(new ElevatorToPosition(Elevator.ElevatorPosition.CARGO_SHIP));
 
-		driveStick.buttonRBumper.whenPressed(new GraspHatch());
-		driveStick.buttonLBumper.whenPressed(new ReleaseHatch());
-
-
 		secondStick.buttonStart.whenPressed(new SlideHatchOut());
 		secondStick.buttonBack.whenPressed(new SlideHatchIn());
+
+		driveStick.buttonRBumper.whenPressed(new ReleaseHatch());
+		driveStick.buttonLBumper.whenPressed(new GraspHatch());
 
 		// TODO: need to add controls for extending and retracting intake
 		

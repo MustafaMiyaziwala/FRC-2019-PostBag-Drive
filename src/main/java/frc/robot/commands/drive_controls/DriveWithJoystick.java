@@ -22,9 +22,6 @@ public class DriveWithJoystick extends Command {
 	protected void execute() {
 		double turn = Robot.oi.driveStick.getRX();
 		double forward = Robot.oi.driveStick.getLY();
-		
-		
-		//Robot.driveTrain.rawMotorOutput(-left, -right);
 		if(Robot.elevator.getElevatorEncoderOutput() >= 420 && Robot.elevator.getElevatorEncoderOutput() <= 700){
 			forwardClipAmount = 0.7;
 			turnClipAmount = 0.75;
@@ -36,10 +33,7 @@ public class DriveWithJoystick extends Command {
 			turnClipAmount = 1;
 		}
 
-		Robot.driveTrain.arcadeDrive(-Xbox.clipAxis(forward, forwardClipAmount),0.75*(Xbox.clipAxis(turn, turnClipAmount)));
-		//System.out.println("Driving: " + forward);
-		//Robot.driveTrain.testMotor();
-		//Robot.driveTrain.tankDrive(-left, -right);
+		Robot.driveTrain.arcadeDrive(-Xbox.clipAxis(forward, forwardClipAmount), 0.75*(Xbox.clipAxis(turn, turnClipAmount)));
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

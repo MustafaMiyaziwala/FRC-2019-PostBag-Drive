@@ -56,9 +56,9 @@ public class ElevatorToPosition extends Command {
     isBottom = elevatorTarget == Elevator.ElevatorPosition.DOWN.getPosition();
 
     if (isBottom) {
-      elevatorPID.setOutputLimits(-0.1, 0.55);
+      elevatorPID.setOutputLimits(-0.2, 0.60);
     } else {
-      elevatorPID.setOutputLimits(0, 0.55);
+      elevatorPID.setOutputLimits(0, 0.60);
     }
 
   }
@@ -69,11 +69,14 @@ public class ElevatorToPosition extends Command {
     Robot.elevator.setPower(0);
     elevatorPID.setSetpoint(elevatorPosition.getPosition());
     isFinished = false;
+    hasVibrated = false;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
+
+    System.out.println("RUNNING!");
   
     if(isFinished){
       if(!hasVibrated){
@@ -83,8 +86,11 @@ public class ElevatorToPosition extends Command {
         } finally {
           vibrateControllers.close();
         }
+        hasVibrated = true;
       }
       System.out.println("Finished - stalling");
+      
+      
       if(isBottom){
         Robot.elevator.setPower(0);
       } else{

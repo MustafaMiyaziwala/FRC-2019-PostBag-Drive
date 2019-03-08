@@ -6,7 +6,6 @@ import frc.robot.Robot;
 public class ElevatorControl extends Command {
 
 	
-	Command elevatorPIDCommand;
 	double joyVal;
 
 	public ElevatorControl() {

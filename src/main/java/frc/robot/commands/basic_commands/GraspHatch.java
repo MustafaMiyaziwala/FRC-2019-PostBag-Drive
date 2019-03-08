@@ -15,7 +15,7 @@ public class GraspHatch extends Command {
 	// Called just before this Command runs the first time
 	@Override
 	protected void initialize() {
-		Robot.hatchMechanism.graspLotus();
+		Robot.hatchMechanism.graspHatch();
 	}
 
 	// Called repeatedly when this Command is scheduled to run

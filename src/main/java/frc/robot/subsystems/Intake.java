@@ -20,8 +20,6 @@ public class Intake extends Subsystem {
 	Debouncer.RawInput beamBreakInput;
 	Debouncer beamBreakDebouncer;
 
-	public static final int BALL_IS_IN_CURRENT = 0;
-
 	public Intake() {
 		masterIntakeMotor = new WPI_TalonSRX(RobotMap.RIGHT_INTAKE_MOTOR);
 		slaveIntakeMotor = new WPI_TalonSRX(RobotMap.LEFT_INTAKE_MOTOR);
@@ -29,13 +27,13 @@ public class Intake extends Subsystem {
 		masterIntakeMotor.setNeutralMode(NeutralMode.Brake);
 		slaveIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
-		masterIntakeMotor.setInverted(true);
-		slaveIntakeMotor.setInverted(false);
+		masterIntakeMotor.setInverted(false);
+		slaveIntakeMotor.setInverted(true);
 
 		slaveIntakeMotor.follow(masterIntakeMotor);
 
 		innerIntakeMotor = new WPI_TalonSRX(RobotMap.INNER_INTAKE_MOTOR);
-		innerIntakeMotor.setInverted(true);
+		innerIntakeMotor.setInverted(false);
 		innerIntakeMotor.setNeutralMode(NeutralMode.Brake);
 
 		beamBreak = new AnalogInput(RobotMap.INTAKE_SENSOR);
@@ -71,7 +69,7 @@ public class Intake extends Subsystem {
 
 		boolean isCargo = isCargo();
 		
-		if (isCargo || Robot.elevator.getElevatorEncoderOutput() > Elevator.MIN_ENCODER_LIMIT) {
+		if (isCargo || Robot.elevator.getElevatorEncoderOutput() > Elevator.MIN_ENCODER_LIMIT || !getIntakeSolenoidState()) {
 			masterIntakeMotor.set(0);
 		} else {
 			masterIntakeMotor.set(power);
@@ -82,11 +80,7 @@ public class Intake extends Subsystem {
 				retractIntake();
 				if (power < 0) {
 					if(Robot.elevator.getElevatorEncoderOutput() > Elevator.MIN_ENCODER_LIMIT){
-						if(innerIntakeMotor.getOutputCurrent() > BALL_IS_IN_CURRENT){
-							innerIntakeMotor.set(power/4);
-						} else {
-							innerIntakeMotor.set(0);
-						}
+						innerIntakeMotor.set(power*0.75);
 					} else {
 						innerIntakeMotor.set(0);
 					}

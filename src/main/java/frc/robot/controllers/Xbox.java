@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 public class Xbox {
 
-	private static final double JOYSTICK_DEADZONE = 0.00;
+	private static final double JOYSTICK_DEADZONE = 0.05;
 
 	// main circle buttons
 	private static final int BUTTON_A = 1;
@@ -106,7 +106,7 @@ public class Xbox {
 
 	public static double clipAxis(double rawValue, double clipAmount){
 		if(Math.abs(rawValue) > clipAmount){
-			return clipAmount;
+			return rawValue >= 0 ? clipAmount : -clipAmount;
 		} else {
 			return rawValue;
 		}

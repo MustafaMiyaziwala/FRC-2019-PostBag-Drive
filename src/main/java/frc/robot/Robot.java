@@ -168,7 +168,7 @@ public class Robot extends TimedRobot {
 			m_autonomousCommand.cancel();
 		}
 
-		hatchMechanism.graspLotus();
+		hatchMechanism.graspHatch();
 		hatchMechanism.slideIn();
 		intake.retractIntake();
 		elevator.elevatorEncoder.reset();
