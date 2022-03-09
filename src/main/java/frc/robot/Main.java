@@ -19,7 +19,7 @@ public final class Main {
 	}
 
 
-	//Bruh
+	//Brudda Cat
 	/**
 	 * Main initialization function. Do not perform any initialization here.
 	 *
